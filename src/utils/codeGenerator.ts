@@ -156,6 +156,24 @@ export function generateSingleFileHTML(config: WebsiteConfig): string {
     }
   };
 
+  // Standalone SaaS / CX platform detection
+  const isFeedbackPlatform = (config.name || '').toLowerCase().includes('qbaho') || 
+                             (config.header?.logoName || '').toLowerCase().includes('qbaho') || 
+                             (config.seo?.keywords || '').toLowerCase().includes('qbaho') ||
+                             (config.seo?.keywords || '').toLowerCase().includes('qmeter');
+
+  const navServicesLabel = config.features?.title ? 
+    (config.features.title.toLowerCase().includes('kanal') || config.features.title.toLowerCase().includes('imkoniyat') ? 'Imkoniyatlar' : 'Xizmatlar') 
+    : 'Xizmatlar';
+  const navTeamLabel = config.team?.title ? 
+    (config.team.title.toLowerCase().includes('shifokor') ? 'Shifokorlar' : config.team.title.toLowerCase().includes('muhandis') || config.team.title.toLowerCase().includes('arxitektor') ? 'Mutaxassislar' : 'Jamoa') 
+    : 'Jamoa';
+  const navProductsLabel = config.products?.title ? 
+    (config.products.title.toLowerCase().includes('uskuna') || config.products.title.toLowerCase().includes('kiosk') ? 'Uskunalar' : config.products.title.toLowerCase().includes('paket') ? 'Paketlar' : 'Mahsulotlar') 
+    : 'Mahsulotlar';
+  const navContactLabel = (config.contact?.title || '').toLowerCase().includes('demo') ? 'Demo & Aloqa' : 'Aloqa & Qabul';
+  const ctaButtonLabel = config.hero?.ctaText || 'Bog\'lanish';
+
   return `<!DOCTYPE html>
 <html lang="uz" class="scroll-smooth">
 <head>
@@ -236,12 +254,12 @@ ${JSON.stringify(structuredData, null, 2)}
         <!-- Desktop Navigation -->
         <nav id="desktop-nav" class="hidden md:flex items-center gap-1">
           <a href="#home" onclick="navigateTo('home'); return false;" data-nav="home" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">Bosh sahifa</a>
-          ${config.visibility.features ? `<a href="#services" onclick="navigateTo('services'); return false;" data-nav="services" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">Xizmatlar</a>` : ''}
-          ${config.visibility.team && config.team?.items?.length ? `<a href="#team" onclick="navigateTo('team'); return false;" data-nav="team" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">Shifokorlar</a>` : ''}
+          ${config.visibility.features ? `<a href="#services" onclick="navigateTo('services'); return false;" data-nav="services" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">${navServicesLabel}</a>` : ''}
+          ${config.visibility.team && config.team?.items?.length ? `<a href="#team" onclick="navigateTo('team'); return false;" data-nav="team" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">${navTeamLabel}</a>` : ''}
           ${config.visibility.about && config.about ? `<a href="#about" onclick="navigateTo('about'); return false;" data-nav="about" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">Biz haqimizda</a>` : ''}
-          ${config.visibility.products && config.products?.items?.length ? `<a href="#products" onclick="navigateTo('products'); return false;" data-nav="products" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">Paketlar</a>` : ''}
+          ${config.visibility.products && config.products?.items?.length ? `<a href="#products" onclick="navigateTo('products'); return false;" data-nav="products" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">${navProductsLabel}</a>` : ''}
           ${config.visibility.pricing && config.pricing?.plans?.length ? `<a href="#pricing" onclick="navigateTo('pricing'); return false;" data-nav="pricing" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">Narxlar</a>` : ''}
-          <a href="#contact" onclick="navigateTo('contact'); return false;" data-nav="contact" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">Aloqa & Qabul</a>
+          <a href="#contact" onclick="navigateTo('contact'); return false;" data-nav="contact" class="nav-btn px-3.5 py-2 text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all">${navContactLabel}</a>
         </nav>
 
         <!-- CTA & Shopping Cart & Mobile Toggle -->
@@ -253,9 +271,9 @@ ${JSON.stringify(structuredData, null, 2)}
             </button>
           ` : ''}
 
-          <button onclick="openAppointmentModal('Umumiy Qabul va Navbat', 'appointment')" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white ${palette.primaryBtn} ${roundedClass}">
+          <button onclick="openAppointmentModal('${ctaButtonLabel}', 'appointment')" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white ${palette.primaryBtn} ${roundedClass}">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
-            <span>Qabulga yozilish</span>
+            <span>${ctaButtonLabel}</span>
           </button>
           
           <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100">
@@ -333,6 +351,29 @@ ${JSON.stringify(structuredData, null, 2)}
                   <div class="text-xs sm:text-sm font-medium text-slate-600 mt-1">${st.label}</div>
                 </div>
               `).join('')}
+            </div>
+          </div>
+        </section>
+      ` : ''}
+
+      <!-- QBaho Interactive Kiosk Simulator Section -->
+      ${isFeedbackPlatform ? `
+        <section class="py-14 bg-slate-950 text-white border-b border-slate-800">
+          <div class="max-w-4xl mx-auto px-4 text-center">
+            <div class="text-xs font-semibold text-indigo-400 mb-2">Qmeter Xalqaro Tajribasi Asosida · Jonli Kiosk Simulyatori</div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold mb-3 text-white">Mijozlar Fikr Bildirish Jarayoni va 15s Reaksiya</h2>
+            <p class="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto mb-8">Kassadagi sensorli planshet yoki chekdagi QR kod orqali baho berishni quyida sinab ko'ring:</p>
+            <div class="max-w-xl mx-auto bg-slate-900 border-2 border-slate-800 rounded-2xl p-6 text-center shadow-2xl">
+              <div class="text-[11px] text-indigo-400 font-bold mb-2">QBaho Kiosk OS · Filial: Toshkent Markaziy (#04)</div>
+              <h3 class="text-lg font-bold text-white mb-6">Bugungi xizmatimizdan rozi bo'ldingizmi?</h3>
+              <div class="grid grid-cols-5 gap-2 mb-6" id="kiosk-buttons">
+                <button type="button" onclick="handleKioskRate(1)" class="p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-red-500 hover:bg-red-950/40 text-2xl transition-all">😡<div class="text-[10px] text-slate-400 mt-1">1</div></button>
+                <button type="button" onclick="handleKioskRate(2)" class="p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-orange-500 hover:bg-orange-950/40 text-2xl transition-all">😞<div class="text-[10px] text-slate-400 mt-1">2</div></button>
+                <button type="button" onclick="handleKioskRate(3)" class="p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-amber-500 hover:bg-amber-950/40 text-2xl transition-all">😐<div class="text-[10px] text-slate-400 mt-1">3</div></button>
+                <button type="button" onclick="handleKioskRate(4)" class="p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-emerald-500 hover:bg-emerald-950/40 text-2xl transition-all">😊<div class="text-[10px] text-slate-400 mt-1">4</div></button>
+                <button type="button" onclick="handleKioskRate(5)" class="p-3 bg-slate-950 border border-slate-800 rounded-xl hover:border-indigo-500 hover:bg-indigo-950/40 text-2xl transition-all">😍<div class="text-[10px] text-slate-400 mt-1">5</div></button>
+              </div>
+              <div id="kiosk-result" class="hidden p-4 rounded-xl text-xs text-left"></div>
             </div>
           </div>
         </section>
@@ -1015,6 +1056,22 @@ ${JSON.stringify(structuredData, null, 2)}
       if (confirm("Hamma arizalarni tozalashni xohlaysizmi?")) {
         localStorage.removeItem('migroup_leads');
         renderAdminLeads();
+      }
+    }
+
+    function handleKioskRate(score) {
+      const res = document.getElementById('kiosk-result');
+      if (!res) return;
+      res.classList.remove('hidden');
+      if (score <= 2) {
+        res.className = 'p-4 bg-red-950/70 border border-red-800 rounded-xl text-xs text-left space-y-2 text-white';
+        res.innerHTML = '<div class="font-bold text-red-400">🚨 [TELEGRAM CLOSED-LOOP ALERT] QIZIL SHIKOYAT!</div><div class="text-slate-300">Mijoz salbiy baho berdi (' + score + '/5). Filial boshqaruvchisiga 15 soniya ichida muammoni hal qilish vazifasi yuklatildi (SLA taymer faol).</div><button type="button" onclick="document.getElementById(\\'kiosk-result\\').classList.add(\\'hidden\\')" class="mt-2 px-3 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded text-[11px]">Qaytadan sinash</button>';
+      } else if (score >= 4) {
+        res.className = 'p-4 bg-indigo-950/70 border border-indigo-800 rounded-xl text-xs text-left space-y-2 text-white';
+        res.innerHTML = '<div class="font-bold text-indigo-300">⭐ Katta rahmat! NPS indeksiga qo\\'shildi (98.4%)</div><div class="text-slate-300">Sodiq mijozga Google Xarita & Yandexda 5 yulduzli sharh qoldirish uchun QR havola taklif qilindi.</div><button type="button" onclick="document.getElementById(\\'kiosk-result\\').classList.add(\\'hidden\\')" class="mt-2 px-3 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded text-[11px]">Qaytadan sinash</button>';
+      } else {
+        res.className = 'p-4 bg-slate-800 border border-slate-700 rounded-xl text-xs text-left space-y-2 text-white';
+        res.innerHTML = '<div class="font-bold text-slate-200">Tashakkur!</div><div class="text-slate-400">Xolis fikringiz xizmat sifatini oshirishga yo\\'naltirildi.</div><button type="button" onclick="document.getElementById(\\'kiosk-result\\').classList.add(\\'hidden\\')" class="mt-2 px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white rounded text-[11px]">Qaytadan sinash</button>';
       }
     }
   </script>

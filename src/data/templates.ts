@@ -1,6 +1,418 @@
 import { WebsiteConfig } from '../types';
 
 export const templates: Record<string, { label: string; description: string; icon: string; tier: 'oddiy' | 'orta' | 'pro'; config: WebsiteConfig }> = {
+  qbaho: {
+    label: "QBaho – Mijozlar Baholash & Feedback Platformasi",
+    description: "Qmeter tamoyillari asosidagi AI-quvvatli mijozlar fikrini yig'ish, sensorli kiosklar, QR-kodlar va yopiq zanjirli shikoyat tizimi (Pro SaaS)",
+    icon: "Activity",
+    tier: "pro",
+    config: {
+      name: "QBaho – Omnichannel Mijozlar Baholash Platformasi",
+      tierLevel: "pro",
+      theme: "indigo",
+      font: "modern",
+      borderRadius: "lg",
+      structureMode: "multi_page",
+      seo: {
+        metaTitle: "QBaho – Mijozlar Fikr-Mulohazalari va Xizmat Sifatini O'lchash Platformasi",
+        metaDescription: "Banklar, klinikalar, do'konlar va restoranlar uchun sensorli kiosk, QR-kod va Telegram orqali real vaqtda mijozlar qoniqishini (NPS, CSAT) o'lchash tizimi.",
+        keywords: "qbaho, qmeter, mijozlar baholash tizimi, nps toshkent, csat o'lchash, fikr mulohaza planshet, mijozlar tajribasi, kiosk baholash, telegram ogohlantirish",
+        ogImage: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=1200",
+        canonicalUrl: "https://qbaho.uz",
+        siteName: "QBaho Customer Experience Platform",
+        schemaType: "SoftwareApplication",
+        author: "QBaho Technologies",
+        robots: "index, follow"
+      },
+      header: {
+        logoName: "QBaho",
+        menuItems: [
+          { id: "1", label: "Bosh sahifa", link: "#home" },
+          { id: "2", label: "Imkoniyatlar", link: "#services" },
+          { id: "3", label: "Biz haqimizda", link: "#about" },
+          { id: "4", label: "Uskunalar", link: "#products" },
+          { id: "5", label: "Tariflar", link: "#pricing" },
+          { id: "6", label: "Sharhlar", link: "#testimonials" },
+          { id: "7", label: "Savol-Javob", link: "#faq" },
+          { id: "8", label: "Demo & Aloqa", link: "#contact" }
+        ]
+      },
+      hero: {
+        badge: "⭐ AI-Assisted Omnichannel Mijozlar Baholash Platformasi",
+        title: "Mijozlar fikrini real vaqtda o'lchang va xizmat sifatini yangi bosqichga olib chiqing",
+        subtitle: "Qmeter xalqaro tajribasi asosida: sensorli planshet-kiosk, QR-kodlar, SMS va Telegram so'rovnomalari orqali mijozlar qoniqishini (NPS, CSAT) nazorat qiling. Salbiy baholarga 15 soniyada javob bering.",
+        ctaText: "Bepul Demo Taqdimot",
+        ctaLink: "#contact",
+        imageUrl: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=1200",
+        showCta: true
+      },
+      stats: {
+        title: "QBaho Platformasi Raqamlarda",
+        items: [
+          { id: "st-1", number: "98.4%", label: "Mijozlar Qoniqish Ko'rsatkichi (CSAT)" },
+          { id: "st-2", number: "15 soniya", label: "Salbiy Fikrga Reaksiya Vaqti" },
+          { id: "st-3", number: "4.2x", label: "Mijozlar Sadoqati va Qayta Xaridlar" },
+          { id: "st-4", number: "1,450+", label: "Ulangan Filiallar va Kiosklar" }
+        ]
+      },
+      features: {
+        title: "Ko'p Kanalli (Omnichannel) Fikr Yig'ish va AI Tahlil",
+        subtitle: "Har bir teginish nuqtasida — kassada, stolda, internetda mijozlar his-tuyg'ularini 3 soniyada baholash imkoniyati",
+        items: [
+          {
+            id: "f-1",
+            title: "Sensor Kiosk va Planshet-Stendlar",
+            description: "Banklar, klinikalar va savdo markazlari kassalari uchun qulay sensorli planshet stendlari. Mijozlar 1 klik bilan xizmatga baho beradi (Smayliklar yoki 1-5 yulduz).",
+            iconName: "Activity",
+            badge: "Asosiy Kanal",
+            price: "O'rnatish bepul",
+            benefits: [
+              "3 soniyada tezkor baholash",
+              "O'g'irlikka qarshi mustahkam metall stend",
+              "Offline-First: internet uzilsa ham ishlaydi"
+            ]
+          },
+          {
+            id: "f-2",
+            title: "Chek va Stol Usti QR-Kodlari",
+            description: "Restoranlar, kafelar va kuryerlik yetkazib berish xizmatlari uchun dinamik QR kodlar. Chekdagi yoki stoldagi kod orqali mijoz o'z smartfonida 5 soniyada fikr bildiradi.",
+            iconName: "Zap",
+            badge: "QR Yechim",
+            price: "Cheksiz generatsiya",
+            benefits: [
+              "Ilova o'rnatish shart emas",
+              "Har bir stol va chek uchun unikal kod",
+              "Google Review va Yandex Xaritaga yo'naltirish"
+            ]
+          },
+          {
+            id: "f-3",
+            title: "Yopiq Zanjirli Chiptalar (Closed-Loop Ticketing)",
+            description: "Agar mijoz salbiy baho (1-2 yulduz) qo'ysa, tizim 15 soniya ichida filial boshqaruvchisi yoki direktorning Telegramiga 'Qizil Shikoyat' yuboradi va muammoni zudlik bilan hal qilishga undaydi.",
+            iconName: "Users",
+            badge: "Tezkor Alert",
+            price: "15 soniya tezkorlik",
+            benefits: [
+              "Filial menejeriga Telegram ogohlantirish",
+              "Mijoz ketmasidan oldin muammoni yechish",
+              "SLA vaqt nazorati va audit jurnali"
+            ]
+          },
+          {
+            id: "f-4",
+            title: "NPS va CSAT Tahliliy Boshqaruv Paneli",
+            description: "Net Promoter Score (Sadoqat indeksi), CSAT (Xizmat qoniqishi), CES (Osonlik indeksi) bo'yicha filiallar va smenalarni taqqoslovchi jonli grafiklar va hisobotlar.",
+            iconName: "Layers",
+            badge: "Analitika",
+            price: "Real-vaqt statistikasi",
+            benefits: [
+              "Filiallarni o'zaro solishtirish (Branch Benchmark)",
+              "Haftalik va oylik avtomatik PDF/Excel hisobotlar",
+              "Trendlar va mavsumiy qoniqish grafigi"
+            ]
+          },
+          {
+            id: "f-5",
+            title: "Xodimlar KPI va Reyting Tizimi",
+            description: "Qaysi kassir, shifokor yoki ofitsiant eng yaxshi baholarga ega, qaysi xodimga eng ko'p shikoyat tushayotganini aniq faktlar va audio/matnli izohlar bilan nazorat qiling.",
+            iconName: "Award",
+            badge: "Xodimlar KPI",
+            price: "Avtomatlashgan baholash",
+            benefits: [
+              "Xodimlar o'rtasida motivatsion reyting",
+              "Mukofot va jazo tizimiga to'g'ridan-to'g'ri integratsiya",
+              "Soxta baholarni aniqlash algoritmi"
+            ]
+          },
+          {
+            id: "f-6",
+            title: "1C, CRM va POS Kassa Integratsiyasi",
+            description: "iiko, Jowi, R-Keeper, Poster, 1C Korxona, Bitrix24 va amoCRM bilan to'liq avtomatik integratsiya. Har bir chek va xarid bilan bog'langan baholar.",
+            iconName: "Code",
+            badge: "Integratsiya",
+            price: "API & Webhook",
+            benefits: [
+              "REST API va Webhooks",
+              "Kassa cheki ma'lumotlari bilan sinxron",
+              "Telegram Bot va SMS shlyuzlar"
+            ]
+          }
+        ]
+      },
+      team: {
+        title: "QBaho Yetakchi Arxitektorlari & Muhandislari",
+        subtitle: "Mijozlar tajribasi (CX), Sun'iy Intellekt va kiosk muhandisligi bo'yicha ekspertlar",
+        items: [
+          {
+            id: "tm-1",
+            name: "Jasur Rahimov",
+            role: "Bosh CX Arxitektori & Texnik Direktor",
+            experience: "10+ yil tajriba (Fintech & CX)",
+            specialization: "Omnichannel tizimlar va NPS metodologiyasi",
+            imageUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600",
+            consultationPrice: "Taqdimot bepul"
+          },
+          {
+            id: "tm-2",
+            name: "Nigora Salimova",
+            role: "AI & Sentiment Data Science Rahbari",
+            experience: "8 yil tajriba",
+            specialization: "O'zbek tili matnli va ovozli izohlarini sentiment tahlili",
+            imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600",
+            consultationPrice: "Taqdimot bepul"
+          },
+          {
+            id: "tm-3",
+            name: "Sardorbek Yusupov",
+            role: "Hardware & POS Integratsiya Boshlig'i",
+            experience: "7 yil tajriba",
+            specialization: "Planshet-stendlar, 1C va kassa apparatlari sinxroni",
+            imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600",
+            consultationPrice: "Taqdimot bepul"
+          }
+        ]
+      },
+      about: {
+        title: "Nima uchun O'zbekistonning ilg'or brendlari QBaho platformasini tanlaydi?",
+        subtitle: "Qmeter tajribasi asosida qurilgan milliy mijozlar tajribasi ekotizimi",
+        content: "Qmeter'ning global amaliyoti shuni ko'rsatdiki: norozi mijozlarning 96 foizi shikoyat qilmasdan indamay raqobatchiga o'tib ketadi. QBaho ushbu muammoni ildizi bilan yechadi. Biz kassada yoki navbatda turgan mijozning kayfiyatini 3 soniyada o'lchaymiz, muammo yuzaga kelganda rahbariyatni darhol xabardor qilamiz va har bir filialning xizmat ko'rsatish standartlarini doimiy yuqori darajada ushlab turamiz.",
+        description: "Qmeter'ning global amaliyoti shuni ko'rsatdiki: norozi mijozlarning 96 foizi shikoyat qilmasdan indamay raqobatchiga o'tib ketadi. QBaho ushbu muammoni ildizi bilan yechadi. Biz kassada yoki navbatda turgan mijozning kayfiyatini 3 soniyada o'lchaymiz, muammo yuzaga kelganda rahbariyatni darhol xabardor qilamiz va har bir filialning xizmat ko'rsatish standartlarini doimiy yuqori darajada ushlab turamiz.",
+        imageUrl: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=1200",
+        bulletPoints: [
+          "3 soniyalik o'ta qulay so'rovnoma interfeysi (Smayliklar, Yulduzlar, NPS 0-10)",
+          "Telegram Bot orqali zudlik bilan 'Qizil Shikoyat' bildirishnomalari",
+          "Offline-First texnologiyasi: internet o'chsa ham ma'lumotlar yo'qolmaydi",
+          "O'zbekiston bo'ylab planshet va metall stendlarni o'rnatish va 24/7 texnik qo'llab-quvvatlash"
+        ]
+      },
+      gallery: {
+        title: "Filiallardagi O'rnatilgan Uskunalar va Kiosklar",
+        subtitle: "Banklar, klinikalar va savdo markazlaridagi jonli amaliyot",
+        items: [
+          {
+            id: "gal-1",
+            title: "Bank Kassa Sensor Stendi",
+            description: "Mijozlar navbati va kassa xizmatini 1 tugma bilan baholash",
+            imageUrl: "https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&q=80&w=800",
+            category: "Banklar"
+          },
+          {
+            id: "gal-2",
+            title: "Klinika Qabulxona Kioski",
+            description: "Bemorlar qabulidan keyin shifokor va xizmatga baho berish",
+            imageUrl: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800",
+            category: "Klinikalar"
+          },
+          {
+            id: "gal-3",
+            title: "Restoran Stol Usti QR Akril Stoykasi",
+            description: "Ofitsiant va taomlar sifatiga 5 soniyada fikr bildirish",
+            imageUrl: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800",
+            category: "Restoranlar"
+          },
+          {
+            id: "gal-4",
+            title: "Supermarket Kassa Plansheti",
+            description: "Kassir xizmati tezligi va madaniyatini baholash",
+            imageUrl: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=800",
+            category: "Chakana Savdo"
+          }
+        ]
+      },
+      products: {
+        title: "Tayyor Uskunalar & Kiosk Komplektlari",
+        subtitle: "Biznesingiz uchun to'liq sozlangan, brendlangan planshetlar, himoyalangan metall stendlar",
+        items: [
+          {
+            id: "kiosk-1",
+            name: "QBaho Counter Stand (Kassa plansheti)",
+            description: "Metall mustahkam korpus, 10.1 dyuymli sensor ekran, o'g'irlikka qarshi qulf va doimiy quvvatlagich bilan kassa stoykasi.",
+            price: "1,850,000 UZS",
+            numericPrice: 1850000,
+            imageUrl: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=800",
+            category: "Hardware",
+            inStock: true,
+            badge: "Eng Ko'p Sotilgan"
+          },
+          {
+            id: "kiosk-2",
+            name: "QBaho Floor Kiosk (Polga o'rnatiladigan stend)",
+            description: "Klinikalar, banklar va mehmonxona zallari uchun ergonomik, baland bo'yli, LED yoritgichli premium metall stend.",
+            price: "3,900,000 UZS",
+            numericPrice: 3900000,
+            imageUrl: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800",
+            category: "Hardware",
+            inStock: true,
+            badge: "Premium"
+          },
+          {
+            id: "kiosk-3",
+            name: "QBaho Smart QR Acryl Stand (Stol usti akril)",
+            description: "Restoran va kafelar uchun ultrabinafsha nurga chidamli, brend logotipi tushirilgan smart QR stoykasi.",
+            price: "95,000 UZS",
+            numericPrice: 95000,
+            imageUrl: "https://images.unsplash.com/photo-1586880244406-556ebe35f282?auto=format&fit=crop&q=80&w=800",
+            category: "QR Stend",
+            inStock: true,
+            badge: "Tezkor Yetkazish"
+          }
+        ]
+      },
+      pricing: {
+        title: "Shaffof va Qulay Obuna Tariflari",
+        subtitle: "Yashirin to'lovlarsiz, 14 kunlik bepul sinov muddati va so'mda qulay to'lov",
+        plans: [
+          {
+            id: "plan-start",
+            name: "Start / Kichik Biznes",
+            price: "490,000 UZS",
+            period: "oyiga",
+            features: [
+              "1-3 tagacha filial yoki kassa",
+              "Android & iOS planshet ilovasi",
+              "Dinamik QR-kodlar generatsiyasi",
+              "Telegram orqali tezkor 'Qizil Shikoyat' xabarlari",
+              "Asosiy NPS & CSAT hisobotlari",
+              "Email & Telegram qo'llab-quvvatlash"
+            ],
+            isPopular: false,
+            ctaText: "Start bilan boshlash"
+          },
+          {
+            id: "plan-pro",
+            name: "Biznes Pro / Tarmoq",
+            price: "1,290,000 UZS",
+            period: "oyiga",
+            features: [
+              "10 tagacha filial va nuqtalar",
+              "Cheksiz planshet va QR stendlar",
+              "AI sentiment va matnli fikr tahlili",
+              "Xodimlar individual KPI reytingi",
+              "1C, iiko, Jowi, Bitrix24 integratsiyasi",
+              "Filiallar o'rtasida solishtirma analitika",
+              "24/7 ustuvor texnik yordam"
+            ],
+            isPopular: true,
+            ctaText: "Pro tarifni tanlash"
+          },
+          {
+            id: "plan-enterprise",
+            name: "Enterprise / Korporativ",
+            price: "3,490,000 UZS",
+            period: "oyiga",
+            features: [
+              "Cheksiz filiallar va tarmog'lar",
+              "On-Premise shaxsiy serverga o'rnatish",
+              "Maxsus API va shaxsiy integratsiyalar",
+              "Shaxsiy CX maslahatchi biriktiriladi",
+              "SLA kafolati (99.9% uptime)",
+              "Bank darajasidagi xavfsizlik va PII himoyasi"
+            ],
+            isPopular: false,
+            ctaText: "Korporativ so'rov yuborish"
+          }
+        ]
+      },
+      testimonials: {
+        title: "Mijozlarimiz va Ilg'or Bizneslar Natijalari",
+        subtitle: "QBaho yordamida mijozlar sadoqatini oshirgan va xizmat sifatini yaxshilagan korxonalar fikri",
+        items: [
+          {
+            id: "t-1",
+            author: "Alisher Qosimov",
+            role: "Chakana Savdo Tarmog'i Boshqaruvchisi",
+            quote: "Kassalarimizga QBaho planshetlarini o'rnatganimizdan so'ng, navbatdagi noroziliklar darhol aniqlanib, 2 hafta ichida salbiy fikrlar 68% ga kamaydi! Salbiy baho tushsa darhol direktorga Telegram borishi mo'jiza.",
+            avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
+          },
+          {
+            id: "t-2",
+            author: "Dilnoza Akromova",
+            role: "Xususiy Tibbiyot Markazi Bosh Shifokori",
+            quote: "Har bir shifokor va qabulxona xodimi endi o'z reytingini ko'rib turadi. Bemorlarimizning mamnunlik darajasi 99% ga chiqdi, xodimlar muomalasi sezilarli yaxshilandi.",
+            avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200"
+          },
+          {
+            id: "t-3",
+            author: "Rustam Zokirov",
+            role: "Restoranlar Tarmog'i Ta'sischisi",
+            quote: "Stol ustidagi QR orqali mijoz ovqat yoki ofitsiantdan norozi bo'lsa, xabar menejerga 10 soniyada yetib boradi va biz mijoz ketmasidan vaziyatni to'g'irlaymiz.",
+            avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"
+          }
+        ]
+      },
+      faq: {
+        title: "Ko'p Beriladigan Savollar",
+        subtitle: "QBaho tizimi, uskunalar va o'rnatish jarayoni bo'yicha javoblar",
+        items: [
+          {
+            id: "faq-1",
+            question: "QBaho tizimi qanday ishlaydi?",
+            answer: "Kassa yoki stollarga planshet yoki QR kod o'rnatiladi. Mijoz xarid yoki xizmatdan so'ng 1-3 soniyada smaylik bosadi yoki baho beradi. Barcha natijalar real vaqtda boshqaruv panelida ko'rinadi va tahlil qilinadi."
+          },
+          {
+            id: "faq-2",
+            question: "Internet o'chib qolsa baholar yo'qolmaydimi?",
+            answer: "Yo'q, QBaho ilovasi Offline-First arxitekturasida ishlaydi. Internet yo'q paytda barcha fikrlar planshet xotirasida xavfsiz saqlanadi va internet paydo bo'lishi bilanoq bulutga uzatiladi."
+          },
+          {
+            id: "faq-3",
+            question: "Salbiy fikr bildirilganda Telegram xabari qanchalik tez keladi?",
+            answer: "Mijoz 1 yoki 2 yulduz (xafa smaylik) qo'yganidan keyin roppa-rosa 15 soniya ichida mas'ul filial menejeri yoki rahbarning shaxsiy Telegramiga shikoyat matni va chek ma'lumotlari boradi."
+          },
+          {
+            id: "faq-4",
+            question: "1C, iiko yoki boshqa dasturlarimiz bilan ulana oladimi?",
+            answer: "Ha, QBaho ochiq REST API va Webhooklarga ega bo'lib, 1C, iiko, Jowi, R-Keeper, Poster, Bitrix24 va amoCRM bilan to'liq avtomatik integratsiya qilinadi."
+          }
+        ]
+      },
+      contact: {
+        title: "QBaho Bepul Demo Taqdimotiga Yoziling",
+        subtitle: "Mutaxassisimiz sizning biznesingizga mos yechimni ko'rsatib beradi va 14 kunlik bepul sinov taqdim etadi",
+        address: "Toshkent shahri, Mirobod tumani, Afrosiyob ko'chasi, 12-uy",
+        phone: "+998 71 200 45 45",
+        email: "info@qbaho.uz",
+        showForm: true,
+        workingHours: "Dushanba - Shanba: 09:00 - 19:00",
+        formTitle: "Bepul Taqdimot & Demo Sinov",
+        formSubtitle: "Ma'lumotlaringizni qoldiring, 15 daqiqada siz bilan bog'lanamiz",
+        submitButtonText: "Demo Taqdimotga Yozilish"
+      },
+      footer: {
+        copyrightText: "© 2026 QBaho Technologies. Qmeter xalqaro tajribasi asosidagi mijozlar baholash ekotizimi.",
+        socialTelegram: "https://t.me/qbaho_uz",
+        socialInstagram: "https://instagram.com/qbaho.uz",
+        socialPhone: "tel:+998712004545"
+      },
+      integrations: {
+        telegramBotToken: "",
+        telegramChatId: "",
+        telegramUsername: "qbaho_admin",
+        whatsappPhone: "+998712004545",
+        emailNotifications: "support@qbaho.uz",
+        sendToTelegram: true,
+        sendToWhatsApp: false,
+        successMessage: "Rahmat! QBaho demo taqdimotiga arizangiz qabul qilindi. 15 daqiqada menejerimiz siz bilan bog'lanadi."
+      },
+      visibility: {
+        header: true,
+        hero: true,
+        stats: true,
+        features: true,
+        team: true,
+        about: true,
+        gallery: true,
+        products: true,
+        cart: true,
+        pricing: true,
+        testimonials: true,
+        faq: true,
+        contact: true,
+        footer: true
+      }
+    }
+  },
+
   klinika: {
     label: "Ona va Bola Tibbiyot Majmuasi",
     description: "Xususiy tug'ruqxona, zamonaviy ginekologiya, UZI va robotlashgan laboratoriya (Ko'p sahifali + Qabul tizimi)",

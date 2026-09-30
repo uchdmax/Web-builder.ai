@@ -18,9 +18,9 @@ import AdminSidebar from './components/AdminSidebar';
 import { generateSingleFileHTML } from './utils/codeGenerator';
 
 export default function App() {
-  // Main Config State
+  // Main Config State - Default to QBaho (Qmeter-inspired CX platform)
   const [config, setConfig] = useState<WebsiteConfig>(
-    templates.klinika ? templates.klinika.config : templates.ecommerce.config
+    templates.qbaho ? templates.qbaho.config : (templates.klinika ? templates.klinika.config : templates.ecommerce.config)
   );
   
   // Navigation & View States
@@ -38,7 +38,7 @@ export default function App() {
   const stepMessages = [
     "Gemini AI biznes sohasini tahlil qilmoqda...",
     "Sahifalar arxitekturasi va navigatsiya qurilmoqda...",
-    "Shifokorlar/Mutaxassislar va xizmatlar katalogi shakllantirilmoqda...",
+    "Kiosklar, xizmatlar va uskunalar katalogi shakllantirilmoqda...",
     "Ranglar, dizayn va Telegram integratsiyasi sozlanmoqda...",
     "Veb-portal to'liq tayyor!"
   ];
@@ -47,42 +47,42 @@ export default function App() {
   const [copiedCode, setCopiedCode] = useState<boolean>(false);
   const [telegramTestStatus, setTelegramTestStatus] = useState<{ loading: boolean; success?: boolean; message?: string } | null>(null);
 
-  // CRM Leads State
+  // CRM Leads State (Sample B2B Clients for QBaho)
   const [leads, setLeads] = useState<LeadItem[]>([
     {
       id: 'lead-1',
-      createdAt: '2026-09-02 11:30',
-      fullName: 'Madina Karimova',
-      phone: '+998 90 123 45 67',
-      serviceOrProduct: '4D UZI Skrining va Diagnostika',
-      price: '180,000 UZS',
-      appointmentDate: '2026-09-05',
-      appointmentTime: '10:00',
-      notes: 'I-trimestr skriningi uchun navbatga yozilmoqchiman',
+      createdAt: '2026-09-30 09:15',
+      fullName: 'Ipak Yo\'li Banki (Mirobod filiali)',
+      phone: '+998 71 200 11 22',
+      serviceOrProduct: '4 ta Kassa uchun Counter Planshet Stendlari',
+      price: '7,400,000 UZS',
+      appointmentDate: '2026-10-02',
+      appointmentTime: '11:00',
+      notes: 'Kassa xodimlari va navbat tajribasini o\'lchash uchun demo taqdimot kerak',
       status: 'yangi'
     },
     {
       id: 'lead-2',
-      createdAt: '2026-09-02 10:15',
-      fullName: 'Zulfiya Rahimova',
-      phone: '+998 97 765 43 21',
-      serviceOrProduct: 'Ginekologiya va Endokrinologiya',
-      price: '150,000 UZS',
-      appointmentDate: '2026-09-04',
+      createdAt: '2026-09-29 16:40',
+      fullName: 'Akfa Medline Markaziy Klinika',
+      phone: '+998 90 987 65 43',
+      serviceOrProduct: 'Floor Kiosk (Polga o\'rnatiladigan 2 ta stend)',
+      price: '3,900,000 UZS',
+      appointmentDate: '2026-10-03',
       appointmentTime: '15:30',
-      notes: 'Reproduktolog konsultatsiyasi',
+      notes: 'Qabulxona va UZI bo\'limiga bemorlar qoniqishini o\'lchash stendlari',
       status: 'boglanildi'
     },
     {
       id: 'lead-3',
-      createdAt: '2026-09-01 16:45',
-      fullName: 'Shahlo Umarova',
-      phone: '+998 93 555 88 99',
-      serviceOrProduct: 'Premium Check-up Paketi',
-      price: '850,000 UZS',
-      appointmentDate: '2026-09-06',
-      appointmentTime: '09:00',
-      notes: 'To\'liq oilaviy tibbiy tekshiruv',
+      createdAt: '2026-09-28 14:20',
+      fullName: 'EVOS Fast Food Tarmog\'i (12 ta filial)',
+      phone: '+998 93 555 12 34',
+      serviceOrProduct: 'Biznes Pro Obuna + Dinamik Stol QR Akril',
+      price: '1,290,000 UZS/oy',
+      appointmentDate: '2026-10-04',
+      appointmentTime: '10:00',
+      notes: 'Har bir stoldan Telegram bot orqali salbiy fikr tushganda menejerga xabar',
       status: 'yangi'
     }
   ]);
@@ -90,10 +90,17 @@ export default function App() {
   // Load saved leads and config if available in localStorage
   useEffect(() => {
     try {
+      const qbahoLoaded = localStorage.getItem('migroup_qbaho_active_v1');
       const savedConfig = localStorage.getItem('migroup_app_config');
-      if (savedConfig) {
+      
+      if (!qbahoLoaded && templates.qbaho) {
+        setConfig(templates.qbaho.config);
+        localStorage.setItem('migroup_qbaho_active_v1', 'true');
+        localStorage.setItem('migroup_app_config', JSON.stringify(templates.qbaho.config));
+      } else if (savedConfig) {
         setConfig(JSON.parse(savedConfig));
       }
+
       const savedLeads = localStorage.getItem('migroup_leads');
       if (savedLeads) {
         setLeads(JSON.parse(savedLeads));
@@ -241,7 +248,12 @@ export default function App() {
       });
 
       if (!response.ok) {
-        throw new Error(`Server xatosi: ${response.status}`);
+        let errorMsg = `Server xatosi: ${response.status}`;
+        try {
+          const errData = await response.json();
+          if (errData?.error) errorMsg = errData.error;
+        } catch (_) {}
+        throw new Error(errorMsg);
       }
 
       const generatedConfig = await response.json();

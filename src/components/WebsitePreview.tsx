@@ -42,7 +42,13 @@ import {
   Zap,
   Building2,
   Crown,
-  Plus
+  Plus,
+  Bell,
+  RotateCcw,
+  Smartphone,
+  Tablet,
+  QrCode,
+  AlertTriangle
 } from 'lucide-react';
 import CartDrawer from './CartDrawer';
 
@@ -212,6 +218,31 @@ export default function WebsitePreview({
   // Mobile menu
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Simulator state for QBaho / feedback platforms
+  const [simChannel, setSimChannel] = useState<'kiosk' | 'qr' | 'telegram'>('kiosk');
+  const [simRating, setSimRating] = useState<number | null>(null);
+  const [simReason, setSimReason] = useState<string | null>(null);
+  const [simSubmitted, setSimSubmitted] = useState<boolean>(false);
+  const [simAlertDispatched, setSimAlertDispatched] = useState<boolean>(false);
+
+  const isFeedbackPlatform = (config.name || '').toLowerCase().includes('qbaho') || 
+                             (config.header?.logoName || '').toLowerCase().includes('qbaho') || 
+                             (config.seo?.keywords || '').toLowerCase().includes('qbaho') ||
+                             (config.seo?.keywords || '').toLowerCase().includes('qmeter');
+
+  // Dynamic Navigation Labels
+  const navServicesLabel = config.features?.title ? 
+    (config.features.title.toLowerCase().includes('kanal') || config.features.title.toLowerCase().includes('imkoniyat') ? 'Imkoniyatlar' : 'Xizmatlar') 
+    : 'Xizmatlar';
+  const navTeamLabel = config.team?.title ? 
+    (config.team.title.toLowerCase().includes('shifokor') ? 'Shifokorlar' : config.team.title.toLowerCase().includes('muhandis') || config.team.title.toLowerCase().includes('arxitektor') ? 'Mutaxassislar' : 'Jamoa') 
+    : 'Jamoa';
+  const navProductsLabel = config.products?.title ? 
+    (config.products.title.toLowerCase().includes('uskuna') || config.products.title.toLowerCase().includes('kiosk') ? 'Uskunalar' : config.products.title.toLowerCase().includes('paket') ? 'Paketlar' : 'Mahsulotlar') 
+    : 'Mahsulotlar';
+  const navContactLabel = (config.contact?.title || '').toLowerCase().includes('demo') ? 'Demo & Aloqa' : 'Aloqa & Qabul';
+  const ctaButtonLabel = config.hero.ctaText || 'Bog\'lanish';
+
   // Border radius map
   const roundedClass = {
     none: 'rounded-none',
@@ -374,7 +405,7 @@ export default function WebsitePreview({
                       onClick={() => navigateTo('services')} 
                       className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${currentPage === 'services' || currentPage === 'service-detail' ? palette.activeLink : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                     >
-                      Xizmatlar
+                      {navServicesLabel}
                     </button>
                   )}
                   {config.visibility.team && config.team?.items?.length > 0 && (
@@ -382,7 +413,7 @@ export default function WebsitePreview({
                       onClick={() => navigateTo('team')} 
                       className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${currentPage === 'team' || currentPage === 'doctor-detail' ? palette.activeLink : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                     >
-                      Shifokorlar
+                      {navTeamLabel}
                     </button>
                   )}
                   {config.visibility.about && (
@@ -398,7 +429,7 @@ export default function WebsitePreview({
                       onClick={() => navigateTo('products')} 
                       className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${currentPage === 'products' ? palette.activeLink : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                     >
-                      Paketlar & Do'kon
+                      {navProductsLabel}
                     </button>
                   )}
                   {config.visibility.pricing && config.pricing?.plans?.length > 0 && (
@@ -413,7 +444,7 @@ export default function WebsitePreview({
                     onClick={() => navigateTo('contact')} 
                     className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${currentPage === 'contact' ? palette.activeLink : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
                   >
-                    Aloqa & Qabul
+                    {navContactLabel}
                   </button>
                 </nav>
               )}
@@ -441,7 +472,7 @@ export default function WebsitePreview({
                     className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-white ${palette.primaryBtn} ${roundedClass}`}
                   >
                     <Calendar className="w-3.5 h-3.5" />
-                    <span>Qabulga yozilish</span>
+                    <span>{ctaButtonLabel}</span>
                   </button>
                 )}
 
@@ -460,11 +491,11 @@ export default function WebsitePreview({
           {mobileMenuOpen && (
             <div className={`${isDesktop ? 'md:hidden' : 'block'} border-t border-slate-100 bg-white px-4 py-3 space-y-1 shadow-md`}>
               <button onClick={() => { navigateTo('home'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded">Bosh sahifa</button>
-              {config.visibility.features && <button onClick={() => { navigateTo('services'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded">Xizmatlar</button>}
-              {config.visibility.team && <button onClick={() => { navigateTo('team'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded">Shifokorlar</button>}
+              {config.visibility.features && <button onClick={() => { navigateTo('services'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded">{navServicesLabel}</button>}
+              {config.visibility.team && <button onClick={() => { navigateTo('team'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded">{navTeamLabel}</button>}
               {config.visibility.about && <button onClick={() => { navigateTo('about'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded">Biz haqimizda</button>}
-              {config.visibility.products && <button onClick={() => { navigateTo('products'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded">Check-up Paketlar</button>}
-              <button onClick={() => { navigateTo('contact'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded">Aloqa & Qabul</button>
+              {config.visibility.products && <button onClick={() => { navigateTo('products'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded">{navProductsLabel}</button>}
+              <button onClick={() => { navigateTo('contact'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 rounded">{navContactLabel}</button>
             </div>
           )}
         </header>
@@ -623,6 +654,272 @@ export default function WebsitePreview({
                 </section>
               )}
 
+              {/* ========================================================================= */}
+              {/* QBAHO / QMETER INTERACTIVE OMNICHANNEL FEEDBACK & KIOSK SIMULATOR         */}
+              {/* ========================================================================= */}
+              {isFeedbackPlatform && (
+                <section className={`${isMobile ? 'py-8 px-4' : 'py-14 px-6 lg:px-8'} bg-slate-950 text-white border-b border-slate-800`}>
+                  <div className="max-w-5xl mx-auto">
+                    {/* Header */}
+                    <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 space-y-2">
+                      <div className="inline-flex items-center gap-2 text-xs font-semibold text-indigo-400">
+                        <span>Qmeter Xalqaro Tajribasi Asosida</span>
+                        <span aria-hidden="true">·</span>
+                        <span>Jonli Kiosk Simulyatori</span>
+                      </div>
+                      <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                        Mijozlar Fikr Bildirish Jarayoni va Tezkor Reaksiya
+                      </h2>
+                      <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                        Sensorli planshet-kiosk, chekdagi QR kod yoki Telegram bot qanday ishlashini quyidagi interaktiv stendda bevosita sinab ko'ring:
+                      </p>
+
+                      {/* Interactive Channel Selector */}
+                      <div className="flex items-center justify-center gap-1.5 pt-3">
+                        <div className="inline-flex p-1 bg-slate-900 border border-slate-800 rounded-lg">
+                          <button
+                            type="button"
+                            onClick={() => { setSimChannel('kiosk'); setSimSubmitted(false); }}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                              simChannel === 'kiosk' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            <Tablet className="w-3.5 h-3.5" />
+                            <span>Sensor Kiosk / Planshet</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setSimChannel('qr'); setSimSubmitted(false); }}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                              simChannel === 'qr' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            <QrCode className="w-3.5 h-3.5" />
+                            <span>Chekdagi QR Kod</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setSimChannel('telegram'); setSimSubmitted(false); }}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                              simChannel === 'telegram' ? 'bg-indigo-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            <MessageCircle className="w-3.5 h-3.5" />
+                            <span>Telegram Bot</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Interactive Device Screen Container */}
+                    <div className="max-w-2xl mx-auto bg-slate-900 border-4 border-slate-800 rounded-2xl shadow-2xl p-4 sm:p-7 relative overflow-hidden">
+                      {/* Top device bar */}
+                      <div className="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-5 text-[11px] text-slate-400 font-mono">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                          <span className="font-semibold text-slate-200">QBaho OS v4.2</span>
+                          <span className="hidden sm:inline text-slate-600">|</span>
+                          <span className="hidden sm:inline">Filial: Toshkent Markaziy (#04)</span>
+                        </div>
+                        <div className="text-slate-400">
+                          {simChannel === 'kiosk' ? '📱 Sensor Kassa Rejimi' : simChannel === 'qr' ? '📷 Dinamik QR Rejimi' : '🤖 Telegram Integratsiyasi'}
+                        </div>
+                      </div>
+
+                      {/* Screen Content */}
+                      {!simSubmitted ? (
+                        <div className="space-y-6 text-center">
+                          <div>
+                            <div className="inline-block px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-bold rounded-full mb-3">
+                              {config.header.logoName || 'QBaho'} · Xizmat Sifatini Baholash
+                            </div>
+                            <h3 className="text-lg sm:text-xl font-bold text-white">
+                              Bugungi xizmatimizdan rozi bo'ldingizmi?
+                            </h3>
+                            <p className="text-xs text-slate-400 mt-1">
+                              Iltimos, o'z bahoingizni bering (1 dan 5 gacha):
+                            </p>
+                          </div>
+
+                          {/* 5 Mood Emoji Buttons */}
+                          <div className="grid grid-cols-5 gap-2 sm:gap-3 max-w-lg mx-auto">
+                            {[
+                              { score: 1, emoji: "😡", label: "Juda yomon", color: "hover:border-red-500 hover:bg-red-950/30" },
+                              { score: 2, emoji: "😞", label: "Qoniqarsiz", color: "hover:border-orange-500 hover:bg-orange-950/30" },
+                              { score: 3, emoji: "😐", label: "O'rtacha", color: "hover:border-amber-500 hover:bg-amber-950/30" },
+                              { score: 4, emoji: "😊", label: "Yaxshi", color: "hover:border-emerald-500 hover:bg-emerald-950/30" },
+                              { score: 5, emoji: "😍", label: "A'lo darajada!", color: "hover:border-indigo-500 hover:bg-indigo-950/30" }
+                            ].map((btn) => (
+                              <button
+                                key={btn.score}
+                                type="button"
+                                onClick={() => {
+                                  setSimRating(btn.score);
+                                  setSimReason(null);
+                                  if (btn.score >= 3) {
+                                    setSimSubmitted(true);
+                                  }
+                                }}
+                                className={`flex flex-col items-center justify-center p-2.5 sm:p-3.5 rounded-xl border transition-all cursor-pointer ${
+                                  simRating === btn.score
+                                    ? 'bg-indigo-600/30 border-indigo-500 scale-105 shadow-lg'
+                                    : `bg-slate-950/70 border-slate-800 ${btn.color}`
+                                }`}
+                              >
+                                <span className="text-2xl sm:text-3xl mb-1 select-none">{btn.emoji}</span>
+                                <span className="text-[10px] sm:text-xs font-bold text-slate-300">{btn.score}</span>
+                                <span className="text-[9px] text-slate-500 hidden sm:block truncate w-full text-center mt-0.5">{btn.label}</span>
+                              </button>
+                            ))}
+                          </div>
+
+                          {/* If negative score selected (1 or 2): show reason prompt */}
+                          {simRating && simRating <= 2 && (
+                            <div className="p-4 bg-red-950/30 border border-red-900/60 rounded-xl space-y-3 text-left animate-fadeIn">
+                              <div className="flex items-center gap-2 text-xs font-bold text-red-300">
+                                <AlertTriangle className="w-4 h-4 text-red-400" />
+                                <span>Nima sababdan ko'nglingiz to'lmadi?</span>
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                                {[
+                                  "Kassa navbati juda uzun",
+                                  "Xodimning qo'pol muomalasi",
+                                  "Kassa apparati / to'lov kechikishi",
+                                  "Tozalik va qulaylik past"
+                                ].map((reason, i) => (
+                                  <button
+                                    key={i}
+                                    type="button"
+                                    onClick={() => setSimReason(reason)}
+                                    className={`p-2 rounded-lg text-left text-xs transition-colors border ${
+                                      simReason === reason
+                                        ? 'bg-red-600/30 border-red-500 text-white font-semibold'
+                                        : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'
+                                    }`}
+                                  >
+                                    • {reason}
+                                  </button>
+                                ))}
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => setSimSubmitted(true)}
+                                className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg shadow-md flex items-center justify-center gap-2 cursor-pointer transition-all"
+                              >
+                                <Bell className="w-3.5 h-3.5" />
+                                <span>Fikrni Yuborish (15s Closed-Loop Alert)</span>
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        /* Simulation Success / Alert Screen */
+                        <div className="space-y-5 text-center py-2 animate-fadeIn">
+                          {simRating && simRating <= 2 ? (
+                            /* Red Alert: Closed-loop ticketing in action */
+                            <div className="space-y-4">
+                              <div className="w-12 h-12 rounded-full bg-red-500/20 border border-red-500/40 text-red-400 flex items-center justify-center mx-auto text-xl font-bold">
+                                🚨
+                              </div>
+                              <div>
+                                <h3 className="text-base sm:text-lg font-bold text-white">
+                                  Yopiq Zanjirli Chipta Yaratildi (Closed-Loop SLA)
+                                </h3>
+                                <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+                                  Salbiy baho darhol filial boshqaruvchisining Telegramiga yuborildi. Mijoz ketmasidan avval muammo bartaraf etiladi.
+                                </p>
+                              </div>
+
+                              {/* Telegram Push Notification Card */}
+                              <div className="p-3.5 bg-slate-950 border border-red-800/80 rounded-xl text-left text-xs space-y-2 shadow-lg">
+                                <div className="flex items-center justify-between text-[11px] font-bold text-red-400">
+                                  <span className="flex items-center gap-1.5">
+                                    <Bell className="w-3.5 h-3.5 animate-bounce" />
+                                    [TELEGRAM ALERT] 🚨 QIZIL SHIKOYAT
+                                  </span>
+                                  <span className="text-slate-500 font-mono">15s SLA Taymer: 00:14</span>
+                                </div>
+                                <div className="text-slate-200 text-[11px] leading-relaxed">
+                                  <b>Filial:</b> Toshkent Markaziy · <b>Kassa:</b> #04 · <b>Xodim:</b> Dilshod Q.<br />
+                                  <b>Mijoz Bahosi:</b> {simRating}/5 yulduz · <b>Sabab:</b> "{simReason || 'Kassa navbati juda uzun'}"<br />
+                                  <b>Vazifa:</b> Menejer zudlik bilan navbatni nazoratga olsin!
+                                </div>
+                              </div>
+                            </div>
+                          ) : simRating && simRating >= 4 ? (
+                            /* Positive: Promoter NPS & Google Review Referral */
+                            <div className="space-y-4">
+                              <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto text-xl font-bold">
+                                ⭐
+                              </div>
+                              <div>
+                                <h3 className="text-base sm:text-lg font-bold text-white">
+                                  Katta Rahmat! Fikringiz Xodim Reytingiga Qo'shildi
+                                </h3>
+                                <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
+                                  Sizning ijobiy bahoingiz bugungi NPS indeksini <b>98.4%</b> ga yetkazdi.
+                                </p>
+                              </div>
+
+                              <div className="p-3.5 bg-indigo-950/40 border border-indigo-800/60 rounded-xl text-left text-xs space-y-2">
+                                <div className="font-bold text-indigo-300 flex items-center gap-1.5">
+                                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                                  <span>Google Xarita & Yandex Sharh Havolasi</span>
+                                </div>
+                                <p className="text-[11px] text-slate-300">
+                                  Sodiq mijozga avtomatik tarzda Google Maps va Yandexda 5 yulduzli sharh qoldirish uchun QR havola ochildi. (Bu biznesingizga yangi mijozlar oqimini <b>+35%</b> ga oshiradi).
+                                </p>
+                              </div>
+                            </div>
+                          ) : (
+                            /* Neutral rating */
+                            <div className="space-y-3 py-4">
+                              <div className="text-3xl">😐</div>
+                              <h3 className="text-base font-bold text-white">Tashakkur!</h3>
+                              <p className="text-xs text-slate-400 max-w-sm mx-auto">
+                                Sizning xolis bahoingiz filial xizmat standartlarini yaxshilashga kiritildi.
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Reset Simulation Button */}
+                          <div className="pt-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSimSubmitted(false);
+                                setSimRating(null);
+                                setSimReason(null);
+                              }}
+                              className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                            >
+                              <RotateCcw className="w-3.5 h-3.5" />
+                              <span>Qaytadan Sinab Ko'rish</span>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Device Footer Metrics */}
+                      <div className="mt-6 pt-4 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-center text-[10px] text-slate-400">
+                        <div>
+                          <div className="font-bold text-indigo-400 text-xs">98.4% CSAT</div>
+                          <span>Qoniqish darajasi</span>
+                        </div>
+                        <div>
+                          <div className="font-bold text-emerald-400 text-xs">14.8 soniya</div>
+                          <span>Reaksiya tezligi</span>
+                        </div>
+                        <div>
+                          <div className="font-bold text-amber-400 text-xs">100% Closed-Loop</div>
+                          <span>Muammolar nazorati</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              )}
+
               {/* SERVICES PREVIEW */}
               {config.visibility.features && config.features?.items?.length > 0 && (
                 <section className={`${isMobile ? 'py-8' : 'py-16'} bg-slate-50/60 border-b ${palette.divider}`}>
@@ -756,8 +1053,12 @@ export default function WebsitePreview({
             <div className="py-8 sm:py-12">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-6 sm:mb-8">
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Barcha Tibbiy Xizmatlar & Tashxis</h1>
-                  <p className="text-slate-600 mt-1 text-xs sm:text-sm">To'liq tibbiy xizmatlar ro'yxati, apparatlar va narxlar</p>
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                    {config.features?.title || 'Barcha Imkoniyatlar & Xizmatlar'}
+                  </h1>
+                  <p className="text-slate-600 mt-1 text-xs sm:text-sm">
+                    {config.features?.subtitle || "To'liq imkoniyatlar, kanallar va yechimlar ro'yxati"}
+                  </p>
                 </div>
 
                 <div className={`grid ${gridCols3} gap-4 sm:gap-6`}>
@@ -796,7 +1097,7 @@ export default function WebsitePreview({
                           }}
                           className={`flex-1 py-2 text-xs font-bold text-white ${palette.primaryBtn} ${roundedClass}`}
                         >
-                          Qabulga
+                          {isFeedbackPlatform ? 'Demo Olish' : 'Bog\'lanish'}
                         </button>
                       </div>
                     </div>
@@ -1151,8 +1452,12 @@ export default function WebsitePreview({
 
                   <div className="lg:col-span-7">
                     <div className={`p-5 sm:p-8 bg-white border border-slate-200 ${roundedClass} shadow-sm`}>
-                      <h3 className="text-base font-bold text-slate-900 mb-1">Onlayn Qabulga Yozilish Formasi</h3>
-                      <p className="text-xs text-slate-500 mb-4">Shifokor ko'rigi yoki diagnostika uchun o'zingizga qulay vaqtni tanlang</p>
+                      <h3 className="text-base font-bold text-slate-900 mb-1">
+                        {config.contact?.formTitle || (isFeedbackPlatform ? "Demo Taqdimotga Yozilish" : "Onlayn Bog'lanish Formasi")}
+                      </h3>
+                      <p className="text-xs text-slate-500 mb-4">
+                        {config.contact?.formSubtitle || (isFeedbackPlatform ? "15 daqiqada siz bilan bog'lanib, bepul sinov taqdim etamiz" : "Mutaxassisimiz bilan qulay vaqtni tanlang")}
+                      </p>
 
                       {formSuccess ? (
                         <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 text-xs flex items-center gap-3">
@@ -1207,10 +1512,12 @@ export default function WebsitePreview({
                           </div>
 
                           <div>
-                            <label className="block text-xs font-semibold text-slate-700 mb-1">Xizmat yoki Shifokor</label>
+                            <label className="block text-xs font-semibold text-slate-700 mb-1">
+                              {isFeedbackPlatform ? "Kompaniya nomi / Filiallar soni" : "Xizmat yoki Mutaxassis"}
+                            </label>
                             <input
                               type="text"
-                              placeholder="4D UZI Skrining yoki Shifokor ko'rigi"
+                              placeholder={isFeedbackPlatform ? "Masalan: Restoranlar tarmog'i, 5 ta filial" : "Kerakli xizmat yoki yo'nalish"}
                               value={directForm.service}
                               onChange={(e) => setDirectForm({ ...directForm, service: e.target.value })}
                               className="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -1222,7 +1529,7 @@ export default function WebsitePreview({
                             disabled={formSubmitting}
                             className={`w-full py-3 text-xs font-bold uppercase tracking-wider text-white ${palette.primaryBtn} ${roundedClass}`}
                           >
-                            {formSubmitting ? "Yuborilmoqda..." : "Arizani Yuborish"}
+                            {formSubmitting ? "Yuborilmoqda..." : (config.contact?.submitButtonText || "Arizani Yuborish")}
                           </button>
                         </form>
                       )}

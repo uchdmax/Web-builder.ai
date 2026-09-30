@@ -98,6 +98,7 @@ export default function AdminSidebar({
 
   // Industry prompt presets
   const industryPresets = [
+    { label: "⭐ QBaho – Mijozlar Baholash Tizimi (Qmeter kabi)", prompt: "Banklar, klinikalar, do'konlar va restoranlar uchun mijozlar fikrini o'lchash (NPS, CSAT), sensorli kiosklar, QR kodlar va 15 soniyada salbiy fikrlarga javob beruvchi QBaho SaaS platformasi" },
     { label: "🏥 Xususiy Klinika & UZI", prompt: "Toshkentdagi zamonaviy ginekologiya, 4D UZI skrining va xususiy tug'ruqxona majmuasi uchun professional ko'p sahifali veb-portal" },
     { label: "🛍️ Smart Gadjetlar Do'koni", prompt: "iPhone, MacBook, Apple Watch va original gadjetlar sotiladigan to'liq savatli zamonaviy internet-do'kon" },
     { label: "💻 IT Agentlik & Veb-Dasturlash", prompt: "Bizneslar uchun saytlar, mobil ilovalar va CRM tizimlar yaratuvchi yetakchi dasturlash agentligi" },

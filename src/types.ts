@@ -158,7 +158,7 @@ export interface SeoSettings {
   ogImage: string;
   canonicalUrl?: string;
   siteName?: string;
-  schemaType?: 'MedicalBusiness' | 'Store' | 'LocalBusiness' | 'Organization' | 'Restaurant' | 'EducationalOrganization';
+  schemaType?: 'MedicalBusiness' | 'Store' | 'LocalBusiness' | 'Organization' | 'Restaurant' | 'EducationalOrganization' | 'SoftwareApplication';
   author?: string;
   robots?: 'index, follow' | 'noindex, nofollow';
 }
@@ -211,6 +211,9 @@ export interface WebsiteConfig {
     content: string;
     imageUrl?: string;
     features?: string[];
+    description?: string;
+    bulletPoints?: string[];
+    badge?: string;
   };
   
   gallery: {
@@ -251,6 +254,10 @@ export interface WebsiteConfig {
     address: string;
     showForm: boolean;
     mapEmbedUrl?: string;
+    workingHours?: string;
+    formTitle?: string;
+    formSubtitle?: string;
+    submitButtonText?: string;
   };
   
   footer: {
