@@ -31,7 +31,13 @@ import {
   Award,
   Crown,
   Zap,
-  Building2
+  Building2,
+  Search,
+  Globe,
+  Share2,
+  Image as ImageIcon,
+  Tag,
+  X
 } from 'lucide-react';
 import { WebsiteConfig, ThemeType, FontType, TierLevel, LeadItem, FeatureItem, TeamMemberItem, ProductItem, PricingPlan, FaqItem } from '../types';
 import { templates } from '../data/templates';
@@ -85,6 +91,11 @@ export default function AdminSidebar({
   const [leadFilter, setLeadFilter] = useState<'barchasi' | 'yangi' | 'boglanildi' | 'yakunlandi' | 'bekor_qilindi'>('barchasi');
   const [searchTerm, setSearchTerm] = useState('');
 
+  // SEO Tab States
+  const [seoPreviewMode, setSeoPreviewMode] = useState<'google' | 'social'>('google');
+  const [showAdvancedSeo, setShowAdvancedSeo] = useState<boolean>(false);
+  const [keywordInput, setKeywordInput] = useState<string>('');
+
   // Industry prompt presets
   const industryPresets = [
     { label: "🏥 Xususiy Klinika & UZI", prompt: "Toshkentdagi zamonaviy ginekologiya, 4D UZI skrining va xususiy tug'ruqxona majmuasi uchun professional ko'p sahifali veb-portal" },
@@ -106,6 +117,25 @@ export default function AdminSidebar({
       curr[path[path.length - 1]] = value;
       return copy;
     });
+  };
+
+  const updateSeoField = (key: string, value: any) => {
+    onChangeConfig(prev => ({
+      ...prev,
+      seo: {
+        metaTitle: prev.seo?.metaTitle || `${prev.header.logoName} – ${prev.hero.title}`,
+        metaDescription: prev.seo?.metaDescription || prev.hero.subtitle,
+        keywords: prev.seo?.keywords || '',
+        ogImage: prev.seo?.ogImage || prev.hero.imageUrl,
+        canonicalUrl: prev.seo?.canonicalUrl || 'https://mysite.uz',
+        siteName: prev.seo?.siteName || prev.header.logoName,
+        schemaType: prev.seo?.schemaType || 'LocalBusiness',
+        author: prev.seo?.author || prev.header.logoName,
+        robots: prev.seo?.robots || 'index, follow',
+        ...(prev.seo || {}),
+        [key]: value
+      }
+    }));
   };
 
   const filteredLeads = leads.filter(lead => {
@@ -203,6 +233,7 @@ export default function AdminSidebar({
           { id: 'design', label: 'Dizayn', icon: Sliders },
           { id: 'sections', label: 'Sahifalar', icon: Settings },
           { id: 'content', label: 'Kontent', icon: Edit },
+          { id: 'seo', label: 'SEO & Meta', icon: Search, badge: 'Yangi' },
           { id: 'cart', label: 'Savat', icon: ShoppingBag, badge: config.tierLevel === 'pro' ? 'Pro' : undefined },
           { id: 'leads', label: 'CRM Arizalar', icon: TrendingUp, count: leads.filter(l => l.status === 'yangi').length },
           { id: 'integrations', label: 'Telegram', icon: Send },
@@ -1010,7 +1041,470 @@ export default function AdminSidebar({
         )}
 
         {/* ========================================================= */}
-        {/* 6. E-COMMERCE & SAVAT TAB                                */}
+        {/* 6. SEO & SEARCH METADATA TAB                             */}
+        {/* ========================================================= */}
+        {activeTab === 'seo' && (() => {
+          const currentSeo = config.seo || {
+            metaTitle: `${config.header.logoName} – ${config.hero.title}`,
+            metaDescription: config.hero.subtitle,
+            keywords: `${config.header.logoName}, xizmatlar, buyurtma, narxlar, toshkent`,
+            ogImage: config.hero.imageUrl,
+            canonicalUrl: 'https://mysite.uz',
+            siteName: config.header.logoName,
+            schemaType: 'LocalBusiness',
+            author: config.header.logoName,
+            robots: 'index, follow'
+          };
+
+          const keywordList = (currentSeo.keywords || '')
+            .split(',')
+            .map(k => k.trim())
+            .filter(Boolean);
+
+          const titleLen = (currentSeo.metaTitle || '').length;
+          const descLen = (currentSeo.metaDescription || '').length;
+
+          let seoScore = 0;
+          if (titleLen >= 30 && titleLen <= 60) seoScore += 30;
+          else if (titleLen > 0) seoScore += 15;
+
+          if (descLen >= 70 && descLen <= 160) seoScore += 30;
+          else if (descLen > 0) seoScore += 15;
+
+          if (keywordList.length >= 3) seoScore += 20;
+          else if (keywordList.length > 0) seoScore += 10;
+
+          if (currentSeo.ogImage && currentSeo.ogImage.trim().length > 0) seoScore += 20;
+
+          const removeKeyword = (idxToRemove: number) => {
+            const nextList = keywordList.filter((_, idx) => idx !== idxToRemove);
+            updateSeoField('keywords', nextList.join(', '));
+          };
+
+          const addKeyword = (kw: string) => {
+            const clean = kw.trim();
+            if (!clean) return;
+            if (keywordList.some(k => k.toLowerCase() === clean.toLowerCase())) return;
+            const nextList = [...keywordList, clean];
+            updateSeoField('keywords', nextList.join(', '));
+            setKeywordInput('');
+          };
+
+          const quickPresets = [
+            { label: '🏥 Klinika', url: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&q=80&w=1200' },
+            { label: '🛍️ Do\'kon', url: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=1200' },
+            { label: '💻 IT & Dasturlash', url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200' },
+            { label: '🚗 Avtoservis', url: 'https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&q=80&w=1200' },
+            { label: '🍽️ Restoran', url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200' }
+          ];
+
+          return (
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1 flex items-center gap-1.5">
+                  <Search className="w-3.5 h-3.5" />
+                  SEO & Qidiruv Sozlamalari
+                </h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Google, Yandex qidiruv tizimlarida birinchi o'ringa chiqish hamda Telegram/Facebook'da chiroyli ulashish kartochkalari (OpenGraph) yaratish.
+                </p>
+              </div>
+
+              {/* SEO Score & Audit Card */}
+              <div className="p-3 bg-slate-950 border border-slate-800 rounded-lg space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-200">SEO Salomatlik Balli:</span>
+                    <span className={`px-2 py-0.5 text-[11px] font-bold rounded-full ${
+                      seoScore >= 80 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
+                      seoScore >= 50 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
+                      'bg-red-500/20 text-red-300 border border-red-500/30'
+                    }`}>
+                      {seoScore}% {seoScore >= 80 ? 'A\'lo darajada' : seoScore >= 50 ? 'Yaxshi' : 'Yaxshilash kerak'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full transition-all duration-500 ${
+                      seoScore >= 80 ? 'bg-emerald-500' :
+                      seoScore >= 50 ? 'bg-amber-500' :
+                      'bg-red-500'
+                    }`}
+                    style={{ width: `${seoScore}%` }}
+                  />
+                </div>
+
+                {/* Checklist indicators */}
+                <div className="grid grid-cols-2 gap-1.5 text-[10px] text-slate-400 pt-1">
+                  <div className={`flex items-center gap-1 ${titleLen >= 30 && titleLen <= 60 ? 'text-emerald-400' : 'text-slate-400'}`}>
+                    <CheckCircle2 className="w-3 h-3 flex-shrink-0" />
+                    <span>Sarlavha ({titleLen}/60)</span>
+                  </div>
+                  <div className={`flex items-center gap-1 ${descLen >= 70 && descLen <= 160 ? 'text-emerald-400' : 'text-slate-400'}`}>
+                    <CheckCircle2 className="w-3 h-3 flex-shrink-0" />
+                    <span>Tavsif ({descLen}/160)</span>
+                  </div>
+                  <div className={`flex items-center gap-1 ${keywordList.length >= 3 ? 'text-emerald-400' : 'text-slate-400'}`}>
+                    <CheckCircle2 className="w-3 h-3 flex-shrink-0" />
+                    <span>Kalit so'zlar ({keywordList.length} ta)</span>
+                  </div>
+                  <div className={`flex items-center gap-1 ${currentSeo.ogImage ? 'text-emerald-400' : 'text-slate-400'}`}>
+                    <CheckCircle2 className="w-3 h-3 flex-shrink-0" />
+                    <span>Ijtimoiy rasm (og:image)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Live Preview Switcher (Google Snippet vs Social Card) */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1">
+                    <Globe className="w-3 h-3 text-indigo-400" />
+                    Jonli Ko'rinish Simulyatsiyasi:
+                  </label>
+                  <div className="flex bg-slate-950 p-0.5 rounded border border-slate-800 text-[10px]">
+                    <button
+                      type="button"
+                      onClick={() => setSeoPreviewMode('google')}
+                      className={`px-2 py-0.5 rounded transition-colors font-medium ${
+                        seoPreviewMode === 'google' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+                      }`}
+                    >
+                      Google Qidiruv
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSeoPreviewMode('social')}
+                      className={`px-2 py-0.5 rounded transition-colors font-medium ${
+                        seoPreviewMode === 'social' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+                      }`}
+                    >
+                      Telegram / Ulashish
+                    </button>
+                  </div>
+                </div>
+
+                {/* Google Snippet Preview */}
+                {seoPreviewMode === 'google' && (
+                  <div className="p-3.5 bg-white text-slate-900 rounded-lg shadow-sm border border-slate-300 font-sans space-y-1">
+                    <div className="flex items-center gap-1.5 text-[11px] text-slate-600 truncate">
+                      <div className="w-3.5 h-3.5 rounded-full bg-slate-200 flex items-center justify-center text-[8px] font-bold text-slate-700">
+                        G
+                      </div>
+                      <span className="truncate">{currentSeo.canonicalUrl || 'https://sizningsaytingiz.uz'}</span>
+                      <span className="text-slate-400">› xizmatlar</span>
+                    </div>
+                    <div className="text-blue-700 hover:underline cursor-pointer font-medium text-sm leading-snug line-clamp-1">
+                      {currentSeo.metaTitle || `${config.header.logoName} – ${config.hero.title}`}
+                    </div>
+                    <div className="text-xs text-slate-600 leading-relaxed line-clamp-2">
+                      {currentSeo.metaDescription || config.hero.subtitle}
+                    </div>
+                  </div>
+                )}
+
+                {/* Social Card Preview */}
+                {seoPreviewMode === 'social' && (
+                  <div className="bg-slate-950 rounded-lg border border-slate-800 overflow-hidden shadow-md">
+                    {/* og:image Banner */}
+                    <div className="w-full h-32 bg-slate-900 relative overflow-hidden flex items-center justify-center">
+                      {currentSeo.ogImage ? (
+                        <img 
+                          src={currentSeo.ogImage} 
+                          alt="Social share preview" 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center gap-1 text-slate-500 text-xs">
+                          <ImageIcon className="w-6 h-6" />
+                          <span>Rasm tanlanmagan</span>
+                        </div>
+                      )}
+                      <span className="absolute top-2 left-2 px-1.5 py-0.5 rounded text-[9px] font-bold bg-black/70 text-white backdrop-blur-xs">
+                        og:image
+                      </span>
+                    </div>
+                    {/* Details */}
+                    <div className="p-3 space-y-1 bg-slate-900/90 border-t border-slate-800">
+                      <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                        {(currentSeo.canonicalUrl || 'sizningsaytingiz.uz').replace(/^https?:\/\//, '')}
+                      </div>
+                      <div className="text-xs font-bold text-white line-clamp-1">
+                        {currentSeo.metaTitle || `${config.header.logoName} – ${config.hero.title}`}
+                      </div>
+                      <div className="text-[11px] text-slate-300 line-clamp-2 leading-relaxed">
+                        {currentSeo.metaDescription || config.hero.subtitle}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Form Input 1: Meta-Sarlavha */}
+              <div className="space-y-1.5 p-3 bg-slate-950 border border-slate-800 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-semibold text-slate-200">
+                    Meta-Sarlavha (Title):
+                  </label>
+                  <span className={`text-[10px] font-bold ${
+                    titleLen >= 30 && titleLen <= 60 ? 'text-emerald-400' :
+                    titleLen > 60 ? 'text-red-400' : 'text-amber-400'
+                  }`}>
+                    {titleLen}/60 belgi {titleLen >= 30 && titleLen <= 60 ? '(Ideal)' : titleLen > 60 ? '(Juda uzun)' : '(Qisqa)'}
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  value={currentSeo.metaTitle || ''}
+                  onChange={(e) => updateSeoField('metaTitle', e.target.value)}
+                  placeholder="Masalan: Ona va Bola – Xususiy Ginekologiya va Tug'ruqxona"
+                  className="w-full p-2.5 text-xs bg-slate-900 border border-slate-700 rounded-md text-slate-100 placeholder:text-slate-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => updateSeoField('metaTitle', `${config.header.logoName} – ${config.hero.title}`)}
+                  className="text-[10px] text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium transition-colors"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  Sayt nomi va sarlavhasidan avtomatik to'ldirish
+                </button>
+              </div>
+
+              {/* Form Input 2: Meta-Tavsif */}
+              <div className="space-y-1.5 p-3 bg-slate-950 border border-slate-800 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-semibold text-slate-200">
+                    Meta-Tavsif (Description):
+                  </label>
+                  <span className={`text-[10px] font-bold ${
+                    descLen >= 70 && descLen <= 160 ? 'text-emerald-400' :
+                    descLen > 160 ? 'text-red-400' : 'text-amber-400'
+                  }`}>
+                    {descLen}/160 belgi {descLen >= 70 && descLen <= 160 ? '(Ideal)' : descLen > 160 ? '(Juda uzun)' : '(Qisqa)'}
+                  </span>
+                </div>
+                <textarea
+                  rows={3}
+                  value={currentSeo.metaDescription || ''}
+                  onChange={(e) => updateSeoField('metaDescription', e.target.value)}
+                  placeholder="Sayt haqida qisqacha, jozibali tavsif (Google qidiruv natijalarida va Telegramda ko'rinadi)..."
+                  className="w-full p-2.5 text-xs bg-slate-900 border border-slate-700 rounded-md text-slate-100 placeholder:text-slate-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => updateSeoField('metaDescription', config.hero.subtitle)}
+                  className="text-[10px] text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-medium transition-colors"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  Hero matnidan nusxa olish
+                </button>
+              </div>
+
+              {/* Form Input 3: Kalit So'zlar */}
+              <div className="space-y-2 p-3 bg-slate-950 border border-slate-800 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                    <Tag className="w-3 h-3 text-indigo-400" />
+                    Kalit So'zlar (Keywords):
+                  </label>
+                  <span className="text-[10px] text-slate-400">
+                    {keywordList.length} ta kiritildi
+                  </span>
+                </div>
+
+                <div className="flex gap-1.5">
+                  <input
+                    type="text"
+                    value={keywordInput}
+                    onChange={(e) => setKeywordInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addKeyword(keywordInput);
+                      }
+                    }}
+                    placeholder="Yangi so'z (masalan: toshkent klinika)..."
+                    className="flex-1 p-2 text-xs bg-slate-900 border border-slate-700 rounded-md text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => addKeyword(keywordInput)}
+                    className="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md text-xs font-bold transition-colors"
+                  >
+                    Qo'shish
+                  </button>
+                </div>
+
+                {/* Keyword Tags display */}
+                {keywordList.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {keywordList.map((kw, idx) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-slate-800 border border-slate-700 text-slate-200"
+                      >
+                        {kw}
+                        <button
+                          type="button"
+                          onClick={() => removeKeyword(idx)}
+                          className="hover:text-red-400 ml-0.5 text-slate-400"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Suggestions pills */}
+                <div className="space-y-1 pt-1 border-t border-slate-800/80">
+                  <span className="text-[10px] text-slate-400 block font-medium">
+                    Tavsiya etilgan qo'shimcha so'zlar (1 bosish bilan qo'shish):
+                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    {['toshkent', 'xizmatlar', 'narxlar', 'rasmiy sayt', 'onlayn buyurtma', 'sifatli', 'arzon', 'yetkazib berish'].map(sug => (
+                      <button
+                        key={sug}
+                        type="button"
+                        onClick={() => addKeyword(sug)}
+                        className="text-[10px] px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-colors"
+                      >
+                        + {sug}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Form Input 4: Ijtimoiy Tarmoq Rasmi (og:image) */}
+              <div className="space-y-2 p-3 bg-slate-950 border border-slate-800 rounded-lg">
+                <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+                  <Share2 className="w-3 h-3 text-indigo-400" />
+                  Ijtimoiy Tarmoq Rasmi (og:image):
+                </label>
+                <input
+                  type="text"
+                  value={currentSeo.ogImage || ''}
+                  onChange={(e) => updateSeoField('ogImage', e.target.value)}
+                  placeholder="https://images.unsplash.com/..."
+                  className="w-full p-2 text-xs bg-slate-900 border border-slate-700 rounded-md text-slate-100 placeholder:text-slate-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
+                />
+
+                {/* Quick Presets */}
+                <div className="space-y-1">
+                  <span className="text-[10px] text-slate-400 block font-medium">
+                    Tayyor rasmlardan tanlash:
+                  </span>
+                  <div className="grid grid-cols-2 gap-1">
+                    <button
+                      type="button"
+                      onClick={() => updateSeoField('ogImage', config.hero.imageUrl)}
+                      className="px-2 py-1 text-[10px] bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded text-slate-300 text-left truncate transition-colors"
+                    >
+                      🖼️ Hero rasmini olish
+                    </button>
+                    {quickPresets.map((p, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => updateSeoField('ogImage', p.url)}
+                        className="px-2 py-1 text-[10px] bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded text-slate-300 text-left truncate transition-colors"
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Advanced SEO Toggle & Accordion */}
+              <div className="border border-slate-800 rounded-lg overflow-hidden bg-slate-950">
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedSeo(!showAdvancedSeo)}
+                  className="w-full p-3 flex items-center justify-between text-xs font-bold text-slate-300 hover:text-white transition-colors"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <Settings className="w-3.5 h-3.5 text-indigo-400" />
+                    Kengaytirilgan SEO & Schema.org (JSON-LD)
+                  </span>
+                  <ChevronRight className={`w-3.5 h-3.5 transition-transform ${showAdvancedSeo ? 'rotate-90' : ''}`} />
+                </button>
+
+                {showAdvancedSeo && (
+                  <div className="p-3 pt-0 space-y-3 border-t border-slate-850">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                        Canonical URL (Asosiy sayt manzili):
+                      </label>
+                      <input
+                        type="text"
+                        value={currentSeo.canonicalUrl || ''}
+                        onChange={(e) => updateSeoField('canonicalUrl', e.target.value)}
+                        placeholder="https://sizningsaytingiz.uz"
+                        className="w-full p-2 text-xs bg-slate-900 border border-slate-700 rounded text-slate-200"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                        Sayt Nomi (og:site_name):
+                      </label>
+                      <input
+                        type="text"
+                        value={currentSeo.siteName || ''}
+                        onChange={(e) => updateSeoField('siteName', e.target.value)}
+                        placeholder={config.header.logoName}
+                        className="w-full p-2 text-xs bg-slate-900 border border-slate-700 rounded text-slate-200"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                        Schema.org Mikro-ma'lumot turi (@type):
+                      </label>
+                      <select
+                        value={currentSeo.schemaType || 'LocalBusiness'}
+                        onChange={(e) => updateSeoField('schemaType', e.target.value)}
+                        className="w-full p-2 text-xs bg-slate-900 border border-slate-700 rounded text-slate-200"
+                      >
+                        <option value="LocalBusiness">LocalBusiness (Mahalliy biznes / Servis)</option>
+                        <option value="MedicalBusiness">MedicalBusiness (Klinika / Tibbiyot markazi)</option>
+                        <option value="Store">Store (Online do'kon / E-Commerce)</option>
+                        <option value="Organization">Organization (IT Agentlik / Korporativ)</option>
+                        <option value="Restaurant">Restaurant (Restoran / Kafe / Ovqatlanish)</option>
+                        <option value="EducationalOrganization">EducationalOrganization (O'quv markazi)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-400 mb-1">
+                        Qidiruv Robotlari Ko'rsatmasi (Robots):
+                      </label>
+                      <select
+                        value={currentSeo.robots || 'index, follow'}
+                        onChange={(e) => updateSeoField('robots', e.target.value)}
+                        className="w-full p-2 text-xs bg-slate-900 border border-slate-700 rounded text-slate-200"
+                      >
+                        <option value="index, follow">index, follow (Google'da indekslash tavsiya etiladi)</option>
+                        <option value="noindex, nofollow">noindex, nofollow (Qidiruv tizimlaridan yashirish)</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* ========================================================= */}
+        {/* 7. E-COMMERCE & SAVAT TAB                                */}
         {/* ========================================================= */}
         {activeTab === 'cart' && (
           <div className="space-y-4">

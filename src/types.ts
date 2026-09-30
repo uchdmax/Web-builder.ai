@@ -151,6 +151,18 @@ export interface SectionVisibility {
   footer: boolean;
 }
 
+export interface SeoSettings {
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string;
+  ogImage: string;
+  canonicalUrl?: string;
+  siteName?: string;
+  schemaType?: 'MedicalBusiness' | 'Store' | 'LocalBusiness' | 'Organization' | 'Restaurant' | 'EducationalOrganization';
+  author?: string;
+  robots?: 'index, follow' | 'noindex, nofollow';
+}
+
 export interface WebsiteConfig {
   name: string;
   tierLevel: TierLevel; // 'oddiy' (Landing), 'orta' (Multi-page), 'pro' (Multi-page + E-commerce + CRM)
@@ -158,6 +170,8 @@ export interface WebsiteConfig {
   font: FontType;
   borderRadius: 'none' | 'sm' | 'md' | 'lg' | 'full';
   structureMode: StructureMode; // 'landing' | 'multi_page'
+  
+  seo?: SeoSettings;
   
   header: {
     logoName: string;

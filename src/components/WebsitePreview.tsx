@@ -1356,9 +1356,44 @@ export default function WebsitePreview({
     );
   }
 
-  // Desktop Full View
+  // Desktop Full View with realistic browser chrome header
+  const pageTitle = config.seo?.metaTitle || `${config.header.logoName} – ${config.hero.title}`;
+  const pageUrl = config.seo?.canonicalUrl || 'https://yoursite.uz';
+
   return (
     <div className={`w-full min-h-full ${palette.bg} ${palette.text} transition-all duration-300 font-sans flex flex-col`}>
+      {/* Browser Tab & Address Bar Chrome */}
+      <div className="bg-slate-900 border-b border-slate-800 px-3 py-1.5 flex items-center justify-between text-xs select-none sticky top-0 z-50 shadow-sm">
+        {/* Window controls & Active Tab */}
+        <div className="flex items-center gap-3 max-w-[60%]">
+          <div className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+          </div>
+          {/* Active Tab */}
+          <div className="flex items-center gap-2 px-3 py-1 bg-slate-950 text-slate-200 rounded-t-md border-t border-x border-slate-700/60 max-w-full">
+            <Globe className="w-3 h-3 text-indigo-400 flex-shrink-0" />
+            <span className="truncate text-[11px] font-medium" title={pageTitle}>
+              {pageTitle}
+            </span>
+          </div>
+        </div>
+
+        {/* Address bar mockup */}
+        <div className="flex-1 max-w-xs mx-4 hidden sm:flex items-center gap-1.5 px-2.5 py-0.5 bg-slate-950 border border-slate-800 rounded text-[11px] text-slate-400">
+          <span className="text-emerald-400 font-bold">🔒</span>
+          <span className="truncate">{pageUrl}</span>
+        </div>
+
+        {/* Right SEO indicator */}
+        <div className="flex items-center gap-1.5 text-[10px] text-slate-400">
+          <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-semibold">
+            SEO Ready
+          </span>
+        </div>
+      </div>
+
       <div className="w-full flex-1 flex flex-col bg-white min-h-screen relative shadow-xs">
         {websiteInnerContent}
       </div>

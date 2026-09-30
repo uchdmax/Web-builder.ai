@@ -115,13 +115,77 @@ export function generateSingleFileHTML(config: WebsiteConfig): string {
   // Embed JSON config for client-side routing, cart, CRM, and standalone client admin panel
   const serializedConfig = JSON.stringify(config);
 
+  // SEO & Social Card Metadata resolution
+  const seo = config.seo || {
+    metaTitle: `${config.header.logoName} - ${config.hero.title}`,
+    metaDescription: config.hero.subtitle,
+    keywords: `${config.header.logoName}, xizmatlar, buyurtma, narxlar, toshkent`,
+    ogImage: config.hero.imageUrl,
+    canonicalUrl: 'https://mysite.uz',
+    siteName: config.header.logoName,
+    schemaType: 'LocalBusiness',
+    author: config.header.logoName,
+    robots: 'index, follow'
+  };
+
+  const metaTitle = seo.metaTitle || `${config.header.logoName} - ${config.hero.title}`;
+  const metaDescription = seo.metaDescription || config.hero.subtitle;
+  const keywords = seo.keywords || '';
+  const ogImage = seo.ogImage || config.hero.imageUrl;
+  const canonicalUrl = seo.canonicalUrl || 'https://mysite.uz';
+  const siteName = seo.siteName || config.header.logoName;
+  const schemaType = seo.schemaType || 'Organization';
+  const robots = seo.robots || 'index, follow';
+  const author = seo.author || config.header.logoName;
+
+  // Schema.org Structured Data (JSON-LD)
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": schemaType,
+    "name": siteName,
+    "url": canonicalUrl,
+    "description": metaDescription,
+    "image": ogImage,
+    "telephone": config.contact?.phone || "",
+    "email": config.contact?.email || "",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": config.contact?.address || "Toshkent shahri",
+      "addressLocality": "Toshkent",
+      "addressCountry": "UZ"
+    }
+  };
+
   return `<!DOCTYPE html>
 <html lang="uz" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${config.header.logoName} - ${config.hero.title}</title>
-  <meta name="description" content="${config.hero.subtitle}">
+  <title>${metaTitle}</title>
+  <meta name="description" content="${metaDescription}">
+  ${keywords ? `<meta name="keywords" content="${keywords}">` : ''}
+  <meta name="author" content="${author}">
+  <meta name="robots" content="${robots}">
+  <link rel="canonical" href="${canonicalUrl}">
+
+  <!-- OpenGraph Social Cards (Facebook, Telegram, LinkedIn) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="${siteName}">
+  <meta property="og:title" content="${metaTitle}">
+  <meta property="og:description" content="${metaDescription}">
+  <meta property="og:image" content="${ogImage}">
+  <meta property="og:url" content="${canonicalUrl}">
+
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${metaTitle}">
+  <meta name="twitter:description" content="${metaDescription}">
+  <meta name="twitter:image" content="${ogImage}">
+
+  <!-- Schema.org Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+${JSON.stringify(structuredData, null, 2)}
+  </script>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>

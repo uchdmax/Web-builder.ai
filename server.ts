@@ -40,12 +40,12 @@ app.get("/api/health", (req, res) => {
 });
 
 // Post endpoint to send Telegram notification directly
-app.post("/api/telegram/send", async (req, res) => {
+app.post(["/api/telegram/send", "/api/telegram/test"], async (req, res) => {
   try {
-    const { botToken, chatId, message } = req.body;
+    const { botToken, chatId, message = "🚀 <b>MiGroup Studio</b>: Telegram bot muvaffaqiyatli ulandi va sinovdan o'tdi!" } = req.body;
     
-    if (!botToken || !chatId || !message) {
-      return res.status(400).json({ error: "botToken, chatId va message talab qilinadi." });
+    if (!botToken || !chatId) {
+      return res.status(400).json({ error: "botToken va chatId talab qilinadi." });
     }
 
     const telegramRes = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -71,7 +71,7 @@ app.post("/api/telegram/send", async (req, res) => {
 });
 
 // Post endpoint to generate a fully styled website via Gemini
-app.post("/api/generate", async (req, res) => {
+app.post(["/api/generate", "/api/generate-website"], async (req, res) => {
   try {
     const { prompt, currentTheme = "slate", industry = "general" } = req.body;
     
@@ -318,6 +318,25 @@ Iltimos, ushbu talablarga mos mukammal sayt strukturasini JSON ko'rinishida yara
     }
 
     const generatedConfig = JSON.parse(resultText);
+
+    // Ensure SEO metadata is always present
+    if (!generatedConfig.seo) {
+      const brand = generatedConfig.header?.logoName || generatedConfig.name || "Biznes";
+      const title = generatedConfig.hero?.title || "Rasmiy Portal";
+      const desc = generatedConfig.hero?.subtitle || "Biznesingiz uchun professional va zamonaviy veb-sayt.";
+      generatedConfig.seo = {
+        metaTitle: `${brand} – ${title}`.slice(0, 60),
+        metaDescription: desc.slice(0, 160),
+        keywords: `${brand}, xizmatlar, toshkent, narxlar, buyurtma, sifatli`,
+        ogImage: generatedConfig.hero?.imageUrl || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",
+        canonicalUrl: `https://${brand.toLowerCase().replace(/[^a-z0-9]/g, '') || 'biznes'}.uz`,
+        siteName: brand,
+        schemaType: "LocalBusiness",
+        author: brand,
+        robots: "index, follow"
+      };
+    }
+
     res.json(generatedConfig);
 
   } catch (error: any) {

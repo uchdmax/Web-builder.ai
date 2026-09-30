@@ -13,6 +13,17 @@ export const templates: Record<string, { label: string; description: string; ico
       font: "modern",
       borderRadius: "md",
       structureMode: "multi_page",
+      seo: {
+        metaTitle: "Ona va Bola Tibbiyot Majmuasi – Xususiy Ginekologiya va Tug'ruqxona",
+        metaDescription: "Toshkentdagi yuqori toifali shifokorlar, 4D UZI Voluson E10 skriningi va qulay tug'ruqxona sharoitlari. 24/7 tezkor qabul va statsionar.",
+        keywords: "ginekologiya, 4D UZI, tug'ruqxona toshkent, homiladorlik skriningi, pediatriya, tibbiy ko'rik, laboratoriya",
+        ogImage: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&q=80&w=1200",
+        canonicalUrl: "https://onavabola-klinika.uz",
+        siteName: "Ona va Bola Tibbiyot Majmuasi",
+        schemaType: "MedicalBusiness",
+        author: "Ona va Bola Tibbiyot Markazi",
+        robots: "index, follow"
+      },
       header: {
         logoName: "Ona va Bola",
         menuItems: [
@@ -260,6 +271,17 @@ export const templates: Record<string, { label: string; description: string; ico
       font: "modern",
       borderRadius: "lg",
       structureMode: "multi_page",
+      seo: {
+        metaTitle: "SmartStore Uzbekistan – Original iPhone, MacBook va Smart Gadjetlar",
+        metaDescription: "Rasmiy kafolatli Apple va Xiaomi gadjetlari, O'zbekiston bo'ylab 1 kunda bepul yetkazib berish va qulay to'lov imkoniyati.",
+        keywords: "iphone toshkent, macbook sotib olish, apple watch, smart gadjetlar, original telefonlar, onlayn do'kon",
+        ogImage: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=1200",
+        canonicalUrl: "https://smartstore.uz",
+        siteName: "SmartStore Uzbekistan",
+        schemaType: "Store",
+        author: "SmartStore Official",
+        robots: "index, follow"
+      },
       header: {
         logoName: "SmartStore",
         menuItems: [
@@ -414,6 +436,17 @@ export const templates: Record<string, { label: string; description: string; ico
       font: "modern",
       borderRadius: "lg",
       structureMode: "multi_page",
+      seo: {
+        metaTitle: "MI Group Agency – Professional Veb-Saytlar va IT Yechimlar",
+        metaDescription: "Biznesingiz uchun tezkor, xavfsiz va zamonaviy veb-saytlar, mobil ilovalar va CRM tizimlar ishlab chiqish agentligi.",
+        keywords: "sayt yaratish toshkent, it agentlik, web dasturlash, crm tizimlar, mobil ilovalar, ui ux dizayn",
+        ogImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",
+        canonicalUrl: "https://migroup.uz",
+        siteName: "MI Group Digital Agency",
+        schemaType: "Organization",
+        author: "MI Group Agency",
+        robots: "index, follow"
+      },
       header: {
         logoName: "MI Group",
         menuItems: [
@@ -603,6 +636,17 @@ export const templates: Record<string, { label: string; description: string; ico
       font: "modern",
       borderRadius: "md",
       structureMode: "landing",
+      seo: {
+        metaTitle: "AvtoTa'mir Premium Servis – 24/7 Avtomobillar Diagnostikasi",
+        metaDescription: "Dvigatel, xodovoy qism ta'miri, kompyuter diagnostikasi va original moy almashtirish servisi. Kafolatli ta'mir.",
+        keywords: "avtoservis toshkent, kompyuter diagnostika, motor remont, moy almashtirish sergeli, avto usta",
+        ogImage: "https://images.unsplash.com/photo-1613214149922-f1809c99b414?auto=format&fit=crop&q=80&w=1200",
+        canonicalUrl: "https://avtotamir-servis.uz",
+        siteName: "AvtoTa'mir Premium Servis",
+        schemaType: "LocalBusiness",
+        author: "AvtoTa'mir Servis",
+        robots: "index, follow"
+      },
       header: {
         logoName: "AvtoTa'mir Servis",
         menuItems: [
